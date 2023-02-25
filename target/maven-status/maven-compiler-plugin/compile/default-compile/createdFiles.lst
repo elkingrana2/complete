@@ -1,0 +1,3 @@
+com\example\parqueaderoapi\entities\Usuario.class
+com\example\parqueaderoapi\excepcions\BadRequestException.class
+com\example\parqueaderoapi\excepcions\ResourceNotFoundException.class
