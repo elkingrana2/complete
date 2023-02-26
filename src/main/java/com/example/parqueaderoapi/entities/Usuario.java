@@ -2,12 +2,7 @@ package com.example.parqueaderoapi.entities;
 
 //import org.springframework.boot.context.properties.bind.Name;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "Usuario")
@@ -15,7 +10,7 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(unique = true, nullable = false)
     private Long id;
 
     @Column(name = "nombre")
@@ -24,7 +19,7 @@ public class Usuario {
     @Column(name = "rol")
     private String rol;
 
-    @Column(name = "correo")
+    @Column(name="correo", unique = true)
     private String correo;
     
     public Usuario()
@@ -34,6 +29,13 @@ public class Usuario {
 
     public Usuario(Long id, String nombre, String rol, String correo) {
         this.id = id;
+        this.nombre = nombre;
+        this.rol = rol;
+        this.correo = correo;
+    }
+
+    public Usuario(String nombre, String rol, String correo) {
+       
         this.nombre = nombre;
         this.rol = rol;
         this.correo = correo;
