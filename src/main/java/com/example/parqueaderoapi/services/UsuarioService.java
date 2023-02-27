@@ -1,6 +1,6 @@
 package com.example.parqueaderoapi.services;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.parqueaderoapi.entities.Usuario;
 import com.example.parqueaderoapi.excepcions.CorreoEnUsoException;
-import com.example.parqueaderoapi.excepcions.NombreEnUsoException;
+//import com.example.parqueaderoapi.excepcions.NombreEnUsoException;
 import com.example.parqueaderoapi.excepcions.UsuarioNoEncontradoException;
 import com.example.parqueaderoapi.repositories.UsuarioRepository;
 
