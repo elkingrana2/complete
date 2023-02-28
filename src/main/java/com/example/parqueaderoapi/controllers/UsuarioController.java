@@ -56,5 +56,14 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
+    //Agregar un parqueadero a un socio
+    @PutMapping("/{idUsuario}/parqueaderos/{idParqueadero}")
+    public void agregarParqueaderoSocio(@PathVariable Long idUsuario, @PathVariable Long idParqueadero)
+    {
+
+        usuarioService.agregarParqueaderoSocio(idUsuario, idParqueadero);;
+
+    }
+
 }
 

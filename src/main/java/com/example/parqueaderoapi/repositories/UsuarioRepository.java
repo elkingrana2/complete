@@ -15,5 +15,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     //SELECT * FROM Usuario WHERE correo = ?
     //@Query("SELECT u FROM Usuario u WHERE u.correo = ?1")
     Optional<Usuario> findUsuarioByCorreo(String correo);
+
+    Optional<Usuario> findById(Long id);
     
 }

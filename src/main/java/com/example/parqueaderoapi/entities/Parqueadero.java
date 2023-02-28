@@ -31,6 +31,9 @@ public class Parqueadero {
     @Column(name = "capacidad")
     private int capacidad;
 
+    @Column(name = "espacio_disponible")
+    private int espacioDisponible=capacidad;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
@@ -38,10 +41,14 @@ public class Parqueadero {
     @OneToMany(orphanRemoval = true, mappedBy = "parqueadero", cascade = CascadeType.ALL)
     private List<Vehiculo> vehiculos= new ArrayList<>();
 
+    
+
     public Parqueadero()
     {
 
     }
+
+    
 
     public Parqueadero(Long id, String nombre, String direccion, int capacidad, Usuario usuario,
             List<Vehiculo> vehiculos) {
@@ -51,8 +58,9 @@ public class Parqueadero {
         this.capacidad = capacidad;
         this.usuario = usuario;
         this.vehiculos = vehiculos;
-    }
 
+    }
+    
     public Long getId() {
         return id;
     }
@@ -101,8 +109,20 @@ public class Parqueadero {
         this.vehiculos = vehiculos;
     }
 
-    
+    public int getEspacioDisponible() {
+        return espacioDisponible;
+    }
 
+    public void setEspacioDisponible(int espacioDisponible) {
+        this.espacioDisponible = espacioDisponible;
+    }
+
+    public void addVehiculo(Vehiculo vehiculo) {
+        vehiculos.add(vehiculo);
+        vehiculo.setParqueadero(this);
+    }
+
+    
     
     
 }

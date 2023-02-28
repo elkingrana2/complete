@@ -1,5 +1,6 @@
 package com.example.parqueaderoapi.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,14 +8,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.parqueaderoapi.entities.Parqueadero;
+import com.example.parqueaderoapi.entities.Usuario;
+import com.example.parqueaderoapi.entities.Vehiculo;
 import com.example.parqueaderoapi.excepcions.NombreEnUsoException;
 import com.example.parqueaderoapi.excepcions.ParqueaderoNoEncontradoException;
 import com.example.parqueaderoapi.repositories.ParqueaderoRepository;
+import com.example.parqueaderoapi.repositories.UsuarioRepository;
+import com.example.parqueaderoapi.repositories.VehiculoRepository;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class ParqueaderoService {
     @Autowired
     private ParqueaderoRepository parqueaderoRepository;
+
+    
     
     public List<Parqueadero> obtenerParqueaderos() {
         return parqueaderoRepository.findAll();
@@ -53,5 +62,30 @@ public class ParqueaderoService {
             throw new ParqueaderoNoEncontradoException(id);
         }
     }
+
+    @Autowired
+    private VehiculoRepository vehiculoRepository;
+
+    public void ingresarVehiculo(Vehiculo vehiculoRequest, Long parqueaderoId) {
+        
+        Optional<Parqueadero> optionalParqueadero = parqueaderoRepository.findById(parqueaderoId);
+
+        Parqueadero parqueadero = optionalParqueadero.get();
+
+        Vehiculo vehiculo;
+
+        vehiculo= vehiculoRequest;
+
+        vehiculo.setFechaIngreso(LocalDateTime.now());
+
+        parqueadero.addVehiculo(vehiculo);
+        parqueaderoRepository.save(parqueadero);
+        vehiculoRepository.save(vehiculo);
+
+
+        
+    }
+
+    
 }
 

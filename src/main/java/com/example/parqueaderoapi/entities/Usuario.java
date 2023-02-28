@@ -1,5 +1,7 @@
 package com.example.parqueaderoapi.entities;
 
+import java.util.*;
+
 //import org.springframework.boot.context.properties.bind.Name;
 
 import jakarta.persistence.*;
@@ -21,24 +23,26 @@ public class Usuario {
 
     @Column(name="correo", unique = true)
     private String correo;
-    
-    public Usuario()
-    {
 
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Parqueadero> parqueaderos = new ArrayList<>();
+
+    public Usuario() {
     }
 
-    public Usuario(Long id, String nombre, String rol, String correo) {
+    public Usuario(Long id, String nombre, String rol, String correo, List<Parqueadero> parqueaderos) {
         this.id = id;
         this.nombre = nombre;
         this.rol = rol;
         this.correo = correo;
+        this.parqueaderos = parqueaderos;
     }
 
-    public Usuario(String nombre, String rol, String correo) {
-       
+    public Usuario(String nombre, String rol, String correo, List<Parqueadero> parqueaderos) {
         this.nombre = nombre;
         this.rol = rol;
         this.correo = correo;
+        this.parqueaderos = parqueaderos;
     }
 
     public Long getId() {
@@ -72,5 +76,21 @@ public class Usuario {
     public void setCorreo(String correo) {
         this.correo = correo;
     }
+
+    public List<Parqueadero> getParqueaderos() {
+        return parqueaderos;
+    }
+
+    public void setParqueaderos(List<Parqueadero> parqueaderos) {
+        this.parqueaderos = parqueaderos;
+    }
+
+    public void addParqueadero(Parqueadero parqueadero) {
+        parqueaderos.add(parqueadero);
+        parqueadero.setUsuario(this);
+    }
+
+    
+    
     
 }

@@ -7,10 +7,12 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.parqueaderoapi.entities.Parqueadero;
 import com.example.parqueaderoapi.entities.Usuario;
 import com.example.parqueaderoapi.excepcions.CorreoEnUsoException;
 //import com.example.parqueaderoapi.excepcions.NombreEnUsoException;
 import com.example.parqueaderoapi.excepcions.UsuarioNoEncontradoException;
+import com.example.parqueaderoapi.repositories.ParqueaderoRepository;
 import com.example.parqueaderoapi.repositories.UsuarioRepository;
 
 @Service
@@ -74,6 +76,34 @@ public class UsuarioService {
         } else {
             throw new UsuarioNoEncontradoException(id);
         }
+    }
+
+
+    //Agregar un parqueadero a un socio
+
+    
+    @Autowired
+    private ParqueaderoRepository  parqueaderoRepository;
+
+    public void agregarParqueaderoSocio(Long idUsuario, Long idParqueadero)
+    {
+       
+
+        Optional<Usuario> optionalUsuario = usuarioRepository.findById(idUsuario);
+
+        Usuario usuario = optionalUsuario.get();
+
+        Optional<Parqueadero> optionalParqueadero = parqueaderoRepository.findById(idParqueadero);
+
+        Parqueadero parqueadero = optionalParqueadero.get();
+
+
+        usuario.addParqueadero(parqueadero);
+        usuarioRepository.save(usuario);
+        //usuarioRepository.s
+
+        
+
     }
 
     

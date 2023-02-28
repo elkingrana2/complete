@@ -10,4 +10,8 @@ import com.example.parqueaderoapi.entities.Parqueadero;
 @Repository
 public interface ParqueaderoRepository extends JpaRepository<Parqueadero, Long> {
     Optional<Parqueadero> findByNombre(String nombre);
+
+    
 }
+
+
