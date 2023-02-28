@@ -12,6 +12,8 @@ Esta es una API para llevar el control de vehiculos en parqueaderos por socios, 
 
 Clona este repositorio en tu máquina local
 
+Configura el nombre de la base de datos y credenciales de acceso en application.properties
+
 Abre la terminal en la raíz del proyecto y ejecuta: ```mvnw clean install```
 
 Ejecuta ```mvnw spring-boot:run``` para iniciar el servidor de la API en ```http://localhost:8080```
