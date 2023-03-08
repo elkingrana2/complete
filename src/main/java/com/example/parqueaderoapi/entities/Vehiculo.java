@@ -2,12 +2,10 @@ package com.example.parqueaderoapi.entities;
 
 import java.util.*;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+//import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+//import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import io.micrometer.common.lang.NonNull;
 
 import java.time.LocalDateTime;
 
@@ -15,14 +13,14 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+//import jakarta.persistence.GeneratedValue;
+//import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.*;
+//import jakarta.validation.constraints.*;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "placa")
@@ -32,8 +30,6 @@ public class Vehiculo {
     @Id
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "placa")
-    @NotNull
-    @NotBlank
     private String placa;
 
     @Column(name = "modelo")
@@ -125,6 +121,11 @@ public class Vehiculo {
 
     public void setHistorial(List<Historial> historial) {
         this.historial = historial;
+    }
+
+    public void addHistorial(Historial historial) {
+        this.historial.add(historial);
+        historial.setVehiculo(this);
     }
 
 }

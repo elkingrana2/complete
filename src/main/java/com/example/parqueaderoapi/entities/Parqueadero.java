@@ -45,7 +45,7 @@ public class Parqueadero {
     private int espacioDisponible = capacidad;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    // @JsonBackReference
+    @JsonBackReference
     @JoinColumn(name = "usuario_id")
     private Usuario usuario;
 
