@@ -2,17 +2,14 @@ package com.example.parqueaderoapi.entities;
 
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.*;
+
+import io.micrometer.common.lang.NonNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "Historial")
 public class Historial {
 
@@ -21,31 +18,43 @@ public class Historial {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "fecha_ingreso", nullable = false)
+    @Column(name = "fecha_ingreso")
+    @NonNull
+    @NotBlank
     private LocalDateTime fechaIngreso;
 
-    @Column(name = "fecha_salida", nullable = false)
+    @Column(name = "fecha_salida")
+    @NonNull
+    @NotBlank
     private LocalDateTime fechaSalida;
 
-    @Column(name = "duracion_segundos", nullable = false)
+    @Column(name = "duracion_segundos")
     private Long duracionSegundos;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vehiculo_id", nullable = false)
+    // @JsonBackReference
+    @JoinColumn(name = "placa_vehiculo")
+    @NonNull
+    @NotBlank
     private Vehiculo vehiculo;
-    
-    public Historial()
-    {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    // @JsonBackReference
+    @JoinColumn(name = "parqueadero_id", nullable = false)
+    private Parqueadero parqueadero_id;
+
+    public Historial() {
 
     }
 
     public Historial(Long id, LocalDateTime fechaIngreso, LocalDateTime fechaSalida, Long duracionSegundos,
-            Vehiculo vehiculo) {
+            Vehiculo vehiculo, Parqueadero parqueadero_id) {
         this.id = id;
         this.fechaIngreso = fechaIngreso;
         this.fechaSalida = fechaSalida;
         this.duracionSegundos = duracionSegundos;
         this.vehiculo = vehiculo;
+        this.parqueadero_id = parqueadero_id;
     }
 
     public Long getId() {
@@ -84,9 +93,16 @@ public class Historial {
         return vehiculo;
     }
 
-    public void setVehiculo(Vehiculo vehiculo) {
-        this.vehiculo = vehiculo;
+    public void setVehiculo(Vehiculo Vehiculo) {
+        this.vehiculo = Vehiculo;
     }
 
-    
+    public Parqueadero getParqueadero_id() {
+        return parqueadero_id;
+    }
+
+    public void setParqueadero_id(Parqueadero parqueadero_id) {
+        this.parqueadero_id = parqueadero_id;
+    }
+
 }

@@ -12,6 +12,8 @@ import com.example.parqueaderoapi.entities.Usuario;
 import com.example.parqueaderoapi.entities.Vehiculo;
 import com.example.parqueaderoapi.excepcions.NombreEnUsoException;
 import com.example.parqueaderoapi.excepcions.ParqueaderoNoEncontradoException;
+import com.example.parqueaderoapi.excepcions.VehiculoEnParqueaderoException;
+import com.example.parqueaderoapi.excepcions.ParqueaderoNoAsignadoException;
 import com.example.parqueaderoapi.repositories.ParqueaderoRepository;
 import com.example.parqueaderoapi.repositories.UsuarioRepository;
 import com.example.parqueaderoapi.repositories.VehiculoRepository;
@@ -23,19 +25,18 @@ public class ParqueaderoService {
     @Autowired
     private ParqueaderoRepository parqueaderoRepository;
 
-    
-    
     public List<Parqueadero> obtenerParqueaderos() {
         return parqueaderoRepository.findAll();
     }
-    
+
     public Parqueadero crearParqueadero(Parqueadero parqueadero) throws NombreEnUsoException {
         if (parqueaderoRepository.findByNombre(parqueadero.getNombre()).isPresent()) {
-           throw new NombreEnUsoException(parqueadero.getNombre());
+            throw new NombreEnUsoException(parqueadero.getNombre());
         }
+        parqueadero.setEspacioDisponible(parqueadero.getCapacidad());
         return parqueaderoRepository.save(parqueadero);
     }
-    
+
     public Parqueadero obtenerParqueaderoPorId(Long id) {
         Optional<Parqueadero> parqueaderoOptional = parqueaderoRepository.findById(id);
         if (parqueaderoOptional.isPresent()) {
@@ -44,15 +45,27 @@ public class ParqueaderoService {
             throw new ParqueaderoNoEncontradoException(id);
         }
     }
-    
-    public void actualizarParqueadero(Long id, Parqueadero parqueaderoActualizado) {
+
+    public Parqueadero actualizarParqueadero(Long id, Parqueadero parqueaderoActualizado) {
         Optional<Parqueadero> parqueadero = parqueaderoRepository.findById(id);
         if (parqueadero.isPresent()) {
-            parqueaderoActualizado.setId(id);
-            parqueaderoRepository.save(parqueaderoActualizado);
+            // parqueaderoActualizado.setId(id);
+            // parqueaderoRepository.save(parqueaderoActualizado);
+
+            parqueadero.get().setNombre(parqueaderoActualizado.getNombre());
+            parqueadero.get().setCapacidad(parqueaderoActualizado.getCapacidad());
+            parqueadero.get().setDireccion(parqueaderoActualizado.getDireccion());
         }
+        // parqueaderoActualizado.setEspacioDisponible(
+        // parqueaderoActualizado.getCapacidad() -
+        // parqueaderoActualizado.getVehiculos().size());
+        parqueadero.get()
+                .setEspacioDisponible(parqueaderoActualizado.getCapacidad() - parqueadero.get().getVehiculos().size());
+        Parqueadero parqueaderoActualizadoGuardado = parqueaderoRepository.save(parqueadero.get());
+
+        return parqueaderoActualizadoGuardado;
     }
-    
+
     public boolean eliminarParqueadero(Long id) {
         Optional<Parqueadero> parqueaderoOptional = parqueaderoRepository.findById(id);
         if (parqueaderoOptional.isPresent()) {
@@ -66,15 +79,29 @@ public class ParqueaderoService {
     @Autowired
     private VehiculoRepository vehiculoRepository;
 
-    public void ingresarVehiculo(Vehiculo vehiculoRequest, Long parqueaderoId) {
-        
+    public void ingresarVehiculo(Long parqueaderoId, Vehiculo vehiculoRequest) {
+
         Optional<Parqueadero> optionalParqueadero = parqueaderoRepository.findById(parqueaderoId);
+
+        if (!optionalParqueadero.isPresent()) {
+            throw new ParqueaderoNoEncontradoException(parqueaderoId);
+        }
+
+        Optional<Vehiculo> optionalVehiculo = vehiculoRepository.findByPlaca(vehiculoRequest.getPlaca());
+
+        if (optionalVehiculo.isPresent()) {
+            throw new VehiculoEnParqueaderoException(vehiculoRequest.getPlaca());
+        }
+
+        if (optionalParqueadero.get().getUsuario() == null) {
+            throw new ParqueaderoNoAsignadoException(parqueaderoId);
+        }
 
         Parqueadero parqueadero = optionalParqueadero.get();
 
         Vehiculo vehiculo;
 
-        vehiculo= vehiculoRequest;
+        vehiculo = vehiculoRequest;
 
         vehiculo.setFechaIngreso(LocalDateTime.now());
 
@@ -82,10 +109,10 @@ public class ParqueaderoService {
         parqueaderoRepository.save(parqueadero);
         vehiculoRepository.save(vehiculo);
 
-
-        
     }
 
-    
-}
+    public void registrarSalida() {
 
+    }
+
+}

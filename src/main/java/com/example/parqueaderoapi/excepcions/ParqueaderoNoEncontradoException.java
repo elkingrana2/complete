@@ -1,11 +1,14 @@
 package com.example.parqueaderoapi.excepcions;
 
-public class ParqueaderoNoEncontradoException extends RuntimeException{
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.http.HttpStatus;
 
-    public ParqueaderoNoEncontradoException(Long id)
-    {
+@ResponseStatus(value = HttpStatus.NOT_FOUND)
+public class ParqueaderoNoEncontradoException extends RuntimeException {
+
+    public ParqueaderoNoEncontradoException(Long id) {
         super("No se pudo encontrar al parqueadero con ID: " + id);
 
     }
-    
+
 }

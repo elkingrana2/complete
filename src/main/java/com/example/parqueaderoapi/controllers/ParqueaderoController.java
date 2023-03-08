@@ -18,7 +18,7 @@ import com.example.parqueaderoapi.excepcions.*;
 @RestController
 @RequestMapping("/parqueaderos")
 public class ParqueaderoController {
-    
+
     @Autowired
     ParqueaderoService parqueaderoService;
 
@@ -50,26 +50,20 @@ public class ParqueaderoController {
         return ResponseEntity.noContent().build();
     }
 
-    /* 
     @PutMapping("/{id}")
-    public ResponseEntity<Parqueadero> actualizarParqueadero(@PathVariable Long id, @RequestBody Parqueadero parqueadero) {
+    public ResponseEntity<Parqueadero> actualizarParqueadero(@PathVariable Long id,
+            @RequestBody Parqueadero parqueadero) {
         Parqueadero parqueaderoActualizado = parqueaderoService.actualizarParqueadero(id, parqueadero);
         return ResponseEntity.ok(parqueaderoActualizado);
     }
-    */
 
     @PostMapping("/{parqueaderoId}/vehiculos")
-    public ResponseEntity<String> ingresarVehiculo(@PathVariable Long parqueaderoId, @RequestBody Vehiculo vehiculoRequest) {
-        try {
-            parqueaderoService.ingresarVehiculo(vehiculoRequest, parqueaderoId);
-            return ResponseEntity.ok().build();
-        } catch (ParqueaderoException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
+    public ResponseEntity<String> ingresarVehiculo(@PathVariable Long parqueaderoId,
+            @RequestBody Vehiculo vehiculoRequest) {
+
+        parqueaderoService.ingresarVehiculo(parqueaderoId, vehiculoRequest);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Vehiculo ingresado correctamente");
+
     }
 
-
-
 }
-
-

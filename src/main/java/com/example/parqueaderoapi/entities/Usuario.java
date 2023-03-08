@@ -2,11 +2,18 @@ package com.example.parqueaderoapi.entities;
 
 import java.util.*;
 
+import com.fasterxml.jackson.annotation.*;
+
 //import org.springframework.boot.context.properties.bind.Name;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Entity
+
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "Usuario")
 public class Usuario {
 
@@ -16,15 +23,22 @@ public class Usuario {
     private Long id;
 
     @Column(name = "nombre")
+    @NotNull
+    @NotBlank(message = "El Nombre es obligatorio!")
     private String nombre;
 
     @Column(name = "rol")
+    @NotNull
     private String rol;
 
-    @Column(name="correo", unique = true)
+    @Column(name = "correo")
+    @NotNull
+    @NotBlank(message = "El Correo es obligatorio!")
+    @Email(message = "El Correo debe ser válido!")
     private String correo;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    // @JsonManagedReference
     private List<Parqueadero> parqueaderos = new ArrayList<>();
 
     public Usuario() {
@@ -90,7 +104,4 @@ public class Usuario {
         parqueadero.setUsuario(this);
     }
 
-    
-    
-    
 }

@@ -1,5 +1,14 @@
 package com.example.parqueaderoapi.entities;
+
 import java.util.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import io.micrometer.common.lang.NonNull;
+
 import java.time.LocalDateTime;
 
 import jakarta.persistence.CascadeType;
@@ -13,17 +22,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.*;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "placa")
 @Table(name = "Vehiculo")
 public class Vehiculo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private Long id;
-
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "placa")
+    @NotNull
+    @NotBlank
     private String placa;
 
     @Column(name = "modelo")
@@ -39,35 +49,26 @@ public class Vehiculo {
     private LocalDateTime fechaSalida;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    // @JsonBackReference
     @JoinColumn(name = "parqueadero_id")
     private Parqueadero parqueadero;
 
     @OneToMany(orphanRemoval = true, mappedBy = "vehiculo", cascade = CascadeType.ALL)
+    // @JsonManagedReference
     private List<Historial> historial = new ArrayList<>();
 
-    public Vehiculo()
-    {
+    public Vehiculo() {
 
     }
 
-    public Vehiculo(Long id, String placa, String modelo, String color, LocalDateTime fechaIngreso,
-            LocalDateTime fechaSalida, Parqueadero parqueadero, List<Historial> historial) {
-        this.id = id;
+    public Vehiculo(String placa, String modelo, String color, LocalDateTime fechaIngreso, LocalDateTime fechaSalida,
+            Parqueadero parqueadero) {
         this.placa = placa;
         this.modelo = modelo;
         this.color = color;
         this.fechaIngreso = fechaIngreso;
         this.fechaSalida = fechaSalida;
         this.parqueadero = parqueadero;
-        this.historial = historial;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getPlaca() {
@@ -126,7 +127,4 @@ public class Vehiculo {
         this.historial = historial;
     }
 
-    
-
-    
 }

@@ -11,6 +11,8 @@ import com.example.parqueaderoapi.entities.Usuario;
 import com.example.parqueaderoapi.excepcions.*;
 import com.example.parqueaderoapi.services.UsuarioService;
 
+import jakarta.validation.Valid;
+
 //import jakarta.validation.Valid;
 
 @RestController
@@ -42,8 +44,6 @@ public class UsuarioController {
         }
     }
 
-    
-
     @PutMapping("/{id}")
     public ResponseEntity<Usuario> actualizarUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
         Usuario usuarioActualizado = usuarioService.actualizarUsuario(id, usuario);
@@ -56,14 +56,15 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
-    //Agregar un parqueadero a un socio
+    // Agregar un parqueadero a un socio
     @PutMapping("/{idUsuario}/parqueaderos/{idParqueadero}")
-    public void agregarParqueaderoSocio(@PathVariable Long idUsuario, @PathVariable Long idParqueadero)
-    {
+    public ResponseEntity<String> agregarParqueaderoSocio(@PathVariable Long idUsuario,
+            @PathVariable Long idParqueadero) {
 
-        usuarioService.agregarParqueaderoSocio(idUsuario, idParqueadero);;
+        usuarioService.agregarParqueaderoSocio(idUsuario, idParqueadero);
+
+        return ResponseEntity.ok("Parqueadero agregado al socio");
 
     }
 
 }
-

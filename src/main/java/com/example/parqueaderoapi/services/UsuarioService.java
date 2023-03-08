@@ -21,9 +21,8 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
     @Autowired
-    public UsuarioService(UsuarioRepository usuarioRepository)
-    {
-        this.usuarioRepository=usuarioRepository;
+    public UsuarioService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
     }
 
     public List<Usuario> obtenerUsuarios() {
@@ -39,19 +38,21 @@ public class UsuarioService {
         }
     }
 
-    public Usuario crearUsuario(Usuario usuario) throws CorreoEnUsoException{
+    public Usuario crearUsuario(Usuario usuario) throws CorreoEnUsoException {
 
         if (usuarioRepository.findUsuarioByCorreo(usuario.getCorreo()).isPresent()) {
-           throw new CorreoEnUsoException(usuario.getCorreo());
+            throw new CorreoEnUsoException(usuario.getCorreo());
         }
+        usuario.setRol("socio");
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario actualizarUsuario(Long id, Usuario usuarioActualizado) throws UsuarioNoEncontradoException, CorreoEnUsoException {
+    public Usuario actualizarUsuario(Long id, Usuario usuarioActualizado)
+            throws UsuarioNoEncontradoException, CorreoEnUsoException {
         Usuario usuarioExistente = usuarioRepository.findById(id)
                 .orElseThrow(() -> new UsuarioNoEncontradoException(id));
 
-         //Si el correo ha cambiado, verificar que no esté en uso
+        // Si el correo ha cambiado, verificar que no esté en uso
         if (!usuarioActualizado.getCorreo().equals(usuarioExistente.getCorreo()) &&
                 usuarioRepository.findUsuarioByCorreo(usuarioActualizado.getCorreo()).isPresent()) {
             throw new CorreoEnUsoException(usuarioActualizado.getCorreo());
@@ -59,7 +60,7 @@ public class UsuarioService {
 
         // Actualizar el usuario existente con los nuevos datos
         usuarioExistente.setNombre(usuarioActualizado.getNombre());
-        usuarioExistente.setRol(usuarioActualizado.getRol());
+        usuarioExistente.setRol("socio");
         usuarioExistente.setCorreo(usuarioActualizado.getCorreo());
 
         // Guardar el usuario actualizado
@@ -78,16 +79,12 @@ public class UsuarioService {
         }
     }
 
+    // Agregar un parqueadero a un socio
 
-    //Agregar un parqueadero a un socio
-
-    
     @Autowired
-    private ParqueaderoRepository  parqueaderoRepository;
+    private ParqueaderoRepository parqueaderoRepository;
 
-    public void agregarParqueaderoSocio(Long idUsuario, Long idParqueadero)
-    {
-       
+    public void agregarParqueaderoSocio(Long idUsuario, Long idParqueadero) {
 
         Optional<Usuario> optionalUsuario = usuarioRepository.findById(idUsuario);
 
@@ -97,16 +94,10 @@ public class UsuarioService {
 
         Parqueadero parqueadero = optionalParqueadero.get();
 
-
         usuario.addParqueadero(parqueadero);
         usuarioRepository.save(usuario);
-        //usuarioRepository.s
-
-        
+        // usuarioRepository.s
 
     }
 
-    
-
 }
-
