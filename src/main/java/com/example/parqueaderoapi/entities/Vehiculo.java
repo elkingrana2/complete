@@ -2,9 +2,9 @@ package com.example.parqueaderoapi.entities;
 
 import java.util.*;
 
-//import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-//import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import java.time.LocalDateTime;
@@ -45,12 +45,12 @@ public class Vehiculo {
     private LocalDateTime fechaSalida;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    // @JsonBackReference
+    @JsonBackReference
     @JoinColumn(name = "parqueadero_id")
     private Parqueadero parqueadero;
 
     @OneToMany(orphanRemoval = true, mappedBy = "vehiculo", cascade = CascadeType.ALL)
-    // @JsonManagedReference
+    @JsonManagedReference
     private List<Historial> historial = new ArrayList<>();
 
     public Vehiculo() {
