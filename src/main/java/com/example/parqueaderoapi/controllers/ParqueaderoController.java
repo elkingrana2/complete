@@ -75,4 +75,14 @@ public class ParqueaderoController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Salida registrada correctamente");
     }
 
+    //Ver los vehiculos los parqueaderos
+
+    
+    @GetMapping("/vehiculos")
+    public ResponseEntity<List<Vehiculo>> obtenerVehivulos() {
+        List<Vehiculo> vehiculos = parqueaderoService.obtenerVehiculos();
+        return ResponseEntity.ok(vehiculos);
+    }
+    
+
 }

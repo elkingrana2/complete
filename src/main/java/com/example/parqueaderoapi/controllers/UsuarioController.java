@@ -34,7 +34,7 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
-    @PostMapping(consumes = "application/json;charset=UTF-8", produces = "application/json")
+    @PostMapping()
     public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
         try {
             Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
