@@ -57,6 +57,7 @@ public class ParqueaderoController {
         return ResponseEntity.ok(parqueaderoActualizado);
     }
 
+    // Ingresar un vehiculo al parqueadero
     @PostMapping("/{parqueaderoId}/vehiculos")
     public ResponseEntity<String> ingresarVehiculo(@PathVariable Long parqueaderoId,
             @RequestBody Vehiculo vehiculoRequest) {
@@ -64,6 +65,14 @@ public class ParqueaderoController {
         parqueaderoService.ingresarVehiculo(parqueaderoId, vehiculoRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("Vehiculo ingresado correctamente");
 
+    }
+
+    // Registrar salida del parqueadero
+
+    @PutMapping("/{idParqueadero}/vehiculos/{placa}")
+    public ResponseEntity<String> registrarSalida(@PathVariable Long idParqueadero, @PathVariable String placa) {
+        parqueaderoService.registrarSalida(placa, idParqueadero);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Salida registrada correctamente");
     }
 
 }

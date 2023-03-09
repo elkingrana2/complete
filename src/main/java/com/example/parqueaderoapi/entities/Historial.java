@@ -4,9 +4,10 @@ import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.*;
 
-import io.micrometer.common.lang.NonNull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import java.util.*;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -19,13 +20,11 @@ public class Historial {
     private Long id;
 
     @Column(name = "fecha_ingreso")
-    @NonNull
-    @NotBlank
+    @NotNull
     private LocalDateTime fechaIngreso;
 
     @Column(name = "fecha_salida")
-    @NonNull
-    @NotBlank
+    @NotNull
     private LocalDateTime fechaSalida;
 
     @Column(name = "duracion_segundos")
@@ -34,8 +33,7 @@ public class Historial {
     @ManyToOne(fetch = FetchType.LAZY)
     // @JsonBackReference
     @JoinColumn(name = "placa_vehiculo")
-    @NonNull
-    @NotBlank
+    @NotNull
     private Vehiculo vehiculo;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -93,8 +91,8 @@ public class Historial {
         return vehiculo;
     }
 
-    public void setVehiculo(Vehiculo Vehiculo) {
-        this.vehiculo = Vehiculo;
+    public void setVehiculo(Vehiculo vehiculo) {
+        this.vehiculo = vehiculo;
     }
 
     public Parqueadero getParqueadero_id() {
@@ -104,5 +102,19 @@ public class Historial {
     public void setParqueadero_id(Parqueadero parqueadero_id) {
         this.parqueadero_id = parqueadero_id;
     }
+
+    /*
+     * 
+     * public void addVehiculo(Vehiculo vehiculo) {
+     * vehiculos.add(vehiculo);
+     * vehiculo.setHistorial(this);
+     * 
+     * }
+     * 
+     * public void addParqueadero(Parqueadero parqueadero) {
+     * parqueaderos.add(parqueadero);
+     * parqueadero.setHistorial(this);
+     * }
+     */
 
 }

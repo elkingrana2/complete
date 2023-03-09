@@ -1,11 +1,16 @@
 package com.example.parqueaderoapi.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import com.example.parqueaderoapi.entities.Historial;
+import java.util.Optional;
 
-public interface HistorialRepository extends JpaRepository<Historial, Long>{
+@Repository
+public interface HistorialRepository extends JpaRepository<Historial, Long> {
 
-    Optional<Historial> findByPlaca(String placa);
-    
+    Optional<Historial> findById(Long id);
+
+    // Optional<Historial> createHistorial(Historial historial);
+
 }

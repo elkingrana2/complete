@@ -1,6 +1,7 @@
 package com.example.parqueaderoapi.services;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -14,7 +15,10 @@ import com.example.parqueaderoapi.entities.Vehiculo;
 import com.example.parqueaderoapi.excepcions.NombreEnUsoException;
 import com.example.parqueaderoapi.excepcions.ParqueaderoNoEncontradoException;
 import com.example.parqueaderoapi.excepcions.VehiculoEnParqueaderoException;
+import com.example.parqueaderoapi.excepcions.VehiculoNoEncontradoException;
 import com.example.parqueaderoapi.excepcions.ParqueaderoNoAsignadoException;
+import com.example.parqueaderoapi.excepcions.VehiculoNoAsignadoException;
+import com.example.parqueaderoapi.excepcions.ParqueaderoException;
 import com.example.parqueaderoapi.repositories.HistorialRepository;
 import com.example.parqueaderoapi.repositories.ParqueaderoRepository;
 import com.example.parqueaderoapi.repositories.UsuarioRepository;
@@ -85,62 +89,96 @@ public class ParqueaderoService {
 
         Optional<Parqueadero> optionalParqueadero = parqueaderoRepository.findById(parqueaderoId);
 
+        if (optionalParqueadero.get().getUsuario() == null) {
+            throw new ParqueaderoNoAsignadoException(parqueaderoId);
+        }
+
         if (!optionalParqueadero.isPresent()) {
             throw new ParqueaderoNoEncontradoException(parqueaderoId);
         }
 
         Optional<Vehiculo> optionalVehiculo = vehiculoRepository.findByPlaca(vehiculoRequest.getPlaca());
 
-        if (optionalVehiculo.isPresent()) {
+        if (optionalVehiculo.isPresent() && optionalVehiculo.get().getParqueadero() != null) {
             throw new VehiculoEnParqueaderoException(vehiculoRequest.getPlaca());
         }
 
-        if (optionalParqueadero.get().getUsuario() == null) {
-            throw new ParqueaderoNoAsignadoException(parqueaderoId);
+        if (optionalVehiculo.isPresent()) {
+            Parqueadero parqueadero = optionalParqueadero.get();
+            Vehiculo vehiculo = optionalVehiculo.get();
+
+            vehiculo.setFechaIngreso(LocalDateTime.now());
+            parqueadero.addVehiculo(vehiculo);
+            parqueaderoRepository.save(parqueadero);
+            vehiculoRepository.save(vehiculo);
+        } else {
+
+            Parqueadero parqueadero = optionalParqueadero.get();
+
+            Vehiculo vehiculo;
+
+            vehiculo = vehiculoRequest;
+
+            vehiculo.setFechaIngreso(LocalDateTime.now());
+
+            parqueadero.addVehiculo(vehiculo);
+            parqueaderoRepository.save(parqueadero);
+            vehiculoRepository.save(vehiculo);
+
         }
-
-        Parqueadero parqueadero = optionalParqueadero.get();
-
-        Vehiculo vehiculo;
-
-        vehiculo = vehiculoRequest;
-
-        vehiculo.setFechaIngreso(LocalDateTime.now());
-
-        parqueadero.addVehiculo(vehiculo);
-        parqueaderoRepository.save(parqueadero);
-        vehiculoRepository.save(vehiculo);
 
     }
 
     @Autowired
-    HistorialRepository historialRepository;
+    private HistorialRepository historialRepository;
 
-    public void registrarSalida(Long idParqueadero, String placa) {
+    public void registrarSalida(String placa, Long idParqueadero) {
 
-        Optional<Vehiculo> vehiculo = vehiculoRepository.findByPlaca(placa);
+        Optional<Parqueadero> optionalParqueadero = parqueaderoRepository.findById(idParqueadero);
 
-        // registrar fecha de salida
-        LocalDateTime fechaSalida= LocalDateTime.now();
+        if (!optionalParqueadero.isPresent()) {
+            throw new ParqueaderoNoEncontradoException(idParqueadero);
+        }
 
-        Optional<Parqueadero> parqueadero = parqueaderoRepository.findById(idParqueadero);
+        Optional<Vehiculo> optionalVehiculo = vehiculoRepository.findByPlaca(placa);
 
-        parqueadero.get().setEspacioDisponible(parqueadero.get().getEspacioDisponible()-1);
+        if (!optionalVehiculo.isPresent()) {
+            throw new VehiculoNoEncontradoException(placa);
+        }
 
-        Optional<Historial> historial;
+        if (optionalVehiculo.get().getFechaIngreso() == null) {
+            throw new VehiculoNoAsignadoException(placa);
+        }
 
-        //historial.get().setFechaSalida(fechaSalida);
+        if (optionalVehiculo.get().getParqueadero().getId() != idParqueadero) {
+            throw new ParqueaderoException("El vehiculo no se encuentra en este parqueadero");
+        }
 
+        Parqueadero parqueadero = optionalParqueadero.get();
 
+        Vehiculo vehiculo = optionalVehiculo.get();
 
-        
+        Historial historial = new Historial();
 
+        historial.setFechaIngreso(vehiculo.getFechaIngreso());
+        historial.setFechaSalida(LocalDateTime.now());
+        historial.setDuracionSegundos(vehiculo.getFechaIngreso().until(LocalDateTime.now(),
+                ChronoUnit.SECONDS));
+        vehiculo.addHistorial(historial);
+        historial.setParqueadero_id(parqueadero);
+        // historial.addVehiculo(vehiculo);
+        // historial.addParqueadero(parqueadero);
 
+        historialRepository.save(historial);
+        // historialRepository.createHistorial(historial);
 
-
-
-
-
+        // parqueadero.removeVehiculo(vehiculo);
+        vehiculo.setParqueadero(null);
+        vehiculo.setFechaIngreso(null);
+        vehiculo.setFechaSalida(LocalDateTime.now());
+        vehiculoRepository.save(vehiculo);
+        parqueaderoRepository.save(parqueadero);
+        // vehiculoRepository.save(vehiculo);
 
     }
 
