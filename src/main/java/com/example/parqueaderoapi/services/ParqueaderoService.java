@@ -18,6 +18,7 @@ import com.example.parqueaderoapi.excepcions.VehiculoEnParqueaderoException;
 import com.example.parqueaderoapi.excepcions.VehiculoNoEncontradoException;
 import com.example.parqueaderoapi.excepcions.ParqueaderoNoAsignadoException;
 import com.example.parqueaderoapi.excepcions.VehiculoNoAsignadoException;
+import com.example.parqueaderoapi.excepcions.UsuarioNoEncontradoException;
 import com.example.parqueaderoapi.excepcions.ParqueaderoException;
 import com.example.parqueaderoapi.repositories.HistorialRepository;
 import com.example.parqueaderoapi.repositories.ParqueaderoRepository;
@@ -189,4 +190,45 @@ public class ParqueaderoService {
         return vehiculoRepository.findAll();
     }
 
+    // ver los vehiculos por id de un parqueadero (Los vehiculos que se encuentran
+    // en ese parqueadero)
+
+    public List<Vehiculo> obtenerVehiculosPorParqueadero(Long idParqueadero) {
+
+        Optional<Parqueadero> optionalParqueadero = parqueaderoRepository.findById(idParqueadero);
+
+        if (!optionalParqueadero.isPresent()) {
+            throw new ParqueaderoNoEncontradoException(idParqueadero);
+        }
+
+        if (optionalParqueadero.get().getUsuario() == null) {
+            throw new ParqueaderoNoAsignadoException(idParqueadero);
+        }
+
+        Parqueadero parqueadero = optionalParqueadero.get();
+
+        return parqueadero.getVehiculos();
+    }
+
+    // obtener parqueaderos por usuario
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
+
+    public List<Parqueadero> obtenerParqueaderosPorUsuario(Long idUsuario) {
+
+        Optional<Usuario> optionalUsuario = usuarioRepository.findById(idUsuario);
+
+        if (!optionalUsuario.isPresent()) {
+            throw new UsuarioNoEncontradoException(idUsuario);
+        }
+
+        if (optionalUsuario.get().getParqueaderos().isEmpty()) {
+            throw new ParqueaderoException("El usuario no tiene parqueaderos");
+        }
+
+        Usuario usuario = optionalUsuario.get();
+
+        return usuario.getParqueaderos();
+    }
 }
