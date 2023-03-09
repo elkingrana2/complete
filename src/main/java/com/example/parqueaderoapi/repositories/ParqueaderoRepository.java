@@ -14,4 +14,3 @@ public interface ParqueaderoRepository extends JpaRepository<Parqueadero, Long> 
     
 }
 
-

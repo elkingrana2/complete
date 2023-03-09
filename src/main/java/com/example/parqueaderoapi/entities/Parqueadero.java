@@ -50,7 +50,7 @@ public class Parqueadero {
     private Usuario usuario;
 
     @OneToMany(orphanRemoval = true, mappedBy = "parqueadero", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    // @JsonManagedReference
     private List<Vehiculo> vehiculos = new ArrayList<>();
 
     public Parqueadero() {

@@ -13,8 +13,7 @@ import jakarta.validation.constraints.NotNull;
 
 @Entity
 
-// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
-// property = "id")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "Usuario")
 public class Usuario {
 
@@ -38,10 +37,9 @@ public class Usuario {
     @Email(message = "El Correo debe ser válido!")
     private String correo;
 
-    // @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval =
-    // true)
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     // @JsonManagedReference
-    // private List<Parqueadero> parqueaderos = new ArrayList<>();
+    private List<Parqueadero> parqueaderos = new ArrayList<>();
 
     public Usuario() {
     }
@@ -51,14 +49,14 @@ public class Usuario {
         this.nombre = nombre;
         this.rol = rol;
         this.correo = correo;
-        // this.parqueaderos = parqueaderos;
+        this.parqueaderos = parqueaderos;
     }
 
     public Usuario(String nombre, String rol, String correo, List<Parqueadero> parqueaderos) {
         this.nombre = nombre;
         this.rol = rol;
         this.correo = correo;
-        // this.parqueaderos = parqueaderos;
+        this.parqueaderos = parqueaderos;
     }
 
     public Long getId() {
@@ -93,17 +91,17 @@ public class Usuario {
         this.correo = correo;
     }
 
-    // public List<Parqueadero> getParqueaderos() {
-    // return parqueaderos;
-    // }
+    public List<Parqueadero> getParqueaderos() {
+        return parqueaderos;
+    }
 
-    // public void setParqueaderos(List<Parqueadero> parqueaderos) {
-    // this.parqueaderos = parqueaderos;
-    // }
+    public void setParqueaderos(List<Parqueadero> parqueaderos) {
+        this.parqueaderos = parqueaderos;
+    }
 
-    // public void addParqueadero(Parqueadero parqueadero) {
-    // parqueaderos.add(parqueadero);
-    // parqueadero.setUsuario(this);
-    // }
+    public void addParqueadero(Parqueadero parqueadero) {
+        parqueaderos.add(parqueadero);
+        parqueadero.setUsuario(this);
+    }
 
 }
