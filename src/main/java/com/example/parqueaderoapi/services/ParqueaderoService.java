@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.parqueaderoapi.entities.Historial;
 import com.example.parqueaderoapi.entities.Parqueadero;
 import com.example.parqueaderoapi.entities.Usuario;
 import com.example.parqueaderoapi.entities.Vehiculo;
@@ -14,6 +15,7 @@ import com.example.parqueaderoapi.excepcions.NombreEnUsoException;
 import com.example.parqueaderoapi.excepcions.ParqueaderoNoEncontradoException;
 import com.example.parqueaderoapi.excepcions.VehiculoEnParqueaderoException;
 import com.example.parqueaderoapi.excepcions.ParqueaderoNoAsignadoException;
+import com.example.parqueaderoapi.repositories.HistorialRepository;
 import com.example.parqueaderoapi.repositories.ParqueaderoRepository;
 import com.example.parqueaderoapi.repositories.UsuarioRepository;
 import com.example.parqueaderoapi.repositories.VehiculoRepository;
@@ -111,7 +113,34 @@ public class ParqueaderoService {
 
     }
 
-    public void registrarSalida() {
+    @Autowired
+    HistorialRepository historialRepository;
+
+    public void registrarSalida(Long idParqueadero, String placa) {
+
+        Optional<Vehiculo> vehiculo = vehiculoRepository.findByPlaca(placa);
+
+        // registrar fecha de salida
+        LocalDateTime fechaSalida= LocalDateTime.now();
+
+        Optional<Parqueadero> parqueadero = parqueaderoRepository.findById(idParqueadero);
+
+        parqueadero.get().setEspacioDisponible(parqueadero.get().getEspacioDisponible()-1);
+
+        Optional<Historial> historial;
+
+        //historial.get().setFechaSalida(fechaSalida);
+
+
+
+        
+
+
+
+
+
+
+
 
     }
 
