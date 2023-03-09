@@ -7,8 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.example.parqueaderoapi.entities.Vehiculo;
 
-public interface VehiculoRepository extends JpaRepository<Vehiculo, Long>{
+public interface VehiculoRepository extends JpaRepository<Vehiculo, Long> {
 
     Optional<Vehiculo> findByPlaca(String placa);
-    //Stack<Vehiculo> findByPlaca(String placa);
+
+    Optional<Vehiculo> findByParqueadero(Long idParqueadero);
+    // Stack<Vehiculo> findByPlaca(String placa);
 }

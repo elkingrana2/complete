@@ -94,7 +94,7 @@ public class UsuarioService {
 
         Parqueadero parqueadero = optionalParqueadero.get();
 
-        usuario.addParqueadero(parqueadero);
+        // usuario.addParqueadero(parqueadero);
         usuarioRepository.save(usuario);
         // usuarioRepository.s
 
