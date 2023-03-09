@@ -16,6 +16,7 @@ import com.example.parqueaderoapi.excepcions.NombreEnUsoException;
 import com.example.parqueaderoapi.excepcions.ParqueaderoNoEncontradoException;
 import com.example.parqueaderoapi.excepcions.VehiculoEnParqueaderoException;
 import com.example.parqueaderoapi.excepcions.VehiculoNoEncontradoException;
+import com.example.parqueaderoapi.excepcions.ParqueaderoEnUsoException;
 import com.example.parqueaderoapi.excepcions.ParqueaderoNoAsignadoException;
 import com.example.parqueaderoapi.excepcions.VehiculoNoAsignadoException;
 import com.example.parqueaderoapi.excepcions.UsuarioNoEncontradoException;
@@ -75,6 +76,11 @@ public class ParqueaderoService {
 
     public boolean eliminarParqueadero(Long id) {
         Optional<Parqueadero> parqueaderoOptional = parqueaderoRepository.findById(id);
+
+        if (parqueaderoOptional.get().getVehiculos().isEmpty()) {
+            throw new ParqueaderoEnUsoException(id);
+        }
+
         if (parqueaderoOptional.isPresent()) {
             parqueaderoRepository.deleteById(id);
             return true;
