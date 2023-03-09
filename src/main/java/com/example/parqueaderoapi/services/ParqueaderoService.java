@@ -183,12 +183,10 @@ public class ParqueaderoService {
     }
 
     // ver los vehiculos de un parqueadero
-   
-    
+
     public List<Vehiculo> obtenerVehiculos() {
-        
+
         return vehiculoRepository.findAll();
-        }
-        
-    
+    }
+
 }
