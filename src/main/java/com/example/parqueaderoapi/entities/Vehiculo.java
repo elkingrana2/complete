@@ -20,6 +20,10 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+
 //import jakarta.validation.constraints.*;
 
 @Entity
@@ -30,6 +34,8 @@ public class Vehiculo {
     @Id
     // @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "placa")
+    @Size(min = 6, max = 6, message = "La placa debe tener 6 caracteres")
+    @Pattern(regexp = "^[A-Za-z0-9]*$", message = "La placa debe ser alfanumérica")
     private String placa;
 
     @Column(name = "modelo")

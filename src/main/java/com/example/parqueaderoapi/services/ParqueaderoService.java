@@ -25,6 +25,7 @@ import com.example.parqueaderoapi.repositories.HistorialRepository;
 import com.example.parqueaderoapi.repositories.ParqueaderoRepository;
 import com.example.parqueaderoapi.repositories.UsuarioRepository;
 import com.example.parqueaderoapi.repositories.VehiculoRepository;
+import com.example.parqueaderoapi.excepcions.*;
 
 import jakarta.transaction.Transactional;
 
@@ -105,6 +106,10 @@ public class ParqueaderoService {
             throw new VehiculoEnParqueaderoException(vehiculoRequest.getPlaca());
         }
 
+        if (optionalParqueadero.get().getEspacioDisponible() <= 0) {
+            throw new ParqueaderoLlenoException(parqueaderoId);
+        }
+
         if (optionalVehiculo.isPresent()) {
             Parqueadero parqueadero = optionalParqueadero.get();
             Vehiculo vehiculo = optionalVehiculo.get();
@@ -112,7 +117,7 @@ public class ParqueaderoService {
             vehiculo.setFechaIngreso(LocalDateTime.now());
             vehiculo.setFechaSalida(null);
             parqueadero.addVehiculo(vehiculo);
-            parqueadero.setEspacioDisponible(parqueadero.getEspacioDisponible()-1);
+            parqueadero.setEspacioDisponible(parqueadero.getEspacioDisponible() - 1);
             parqueaderoRepository.save(parqueadero);
             vehiculoRepository.save(vehiculo);
         } else {
@@ -126,7 +131,7 @@ public class ParqueaderoService {
             vehiculo.setFechaIngreso(LocalDateTime.now());
 
             parqueadero.addVehiculo(vehiculo);
-            parqueadero.setEspacioDisponible(parqueadero.getEspacioDisponible()-1);
+            parqueadero.setEspacioDisponible(parqueadero.getEspacioDisponible() - 1);
             parqueaderoRepository.save(parqueadero);
             vehiculoRepository.save(vehiculo);
 
@@ -181,21 +186,21 @@ public class ParqueaderoService {
         vehiculo.setParqueadero(null);
         vehiculo.setFechaIngreso(null);
         vehiculo.setFechaSalida(LocalDateTime.now());
-        parqueadero.setEspacioDisponible(parqueadero.getEspacioDisponible()+1);
+        parqueadero.setEspacioDisponible(parqueadero.getEspacioDisponible() + 1);
         vehiculoRepository.save(vehiculo);
         parqueaderoRepository.save(parqueadero);
         // vehiculoRepository.save(vehiculo);
 
     }
 
-
-    /* 
-    // ver los vehiculos de un parqueadero
-
-    public List<Vehiculo> obtenerVehiculos() {
-
-        return vehiculoRepository.findAll();
-    }*/
+    /*
+     * // ver los vehiculos de un parqueadero
+     * 
+     * public List<Vehiculo> obtenerVehiculos() {
+     * 
+     * return vehiculoRepository.findAll();
+     * }
+     */
 
     // ver los vehiculos por id de un parqueadero (Los vehiculos que se encuentran
     // en ese parqueadero)
@@ -240,23 +245,22 @@ public class ParqueaderoService {
     }
 
     // optener detalle de un vehiculo por su placa
-  public Vehiculo detalleVehiculo(String placa) {
+    public Vehiculo detalleVehiculo(String placa) {
 
-    if (placa == null) {
-      throw new IllegalArgumentException("La placa no puede ser nula");
-    }
-    if (placa.isEmpty()) {
-      throw new IllegalArgumentException("La placa no puede ser vacia");
-    }
-    Optional<Vehiculo> vehiculo = vehiculoRepository.findByPlaca(placa);
+        if (placa == null) {
+            throw new IllegalArgumentException("La placa no puede ser nula");
+        }
+        if (placa.isEmpty()) {
+            throw new IllegalArgumentException("La placa no puede ser vacia");
+        }
+        Optional<Vehiculo> vehiculo = vehiculoRepository.findByPlaca(placa);
 
-    if (!vehiculo.isPresent()) {
-      throw new VehiculoException("El vehiculo con placa " + placa + " no existe");
+        if (!vehiculo.isPresent()) {
+            throw new VehiculoException("El vehiculo con placa " + placa + " no existe");
+        }
+
+        return vehiculo.get();
+
     }
 
-    return vehiculo.get();
-
-    }
-     
-    
 }
