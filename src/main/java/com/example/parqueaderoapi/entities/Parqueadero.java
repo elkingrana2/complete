@@ -1,7 +1,5 @@
 package com.example.parqueaderoapi.entities;
 
-import com.fasterxml.jackson.annotation.*;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,6 +14,8 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.*;
 
 import java.util.*;
+
+import com.fasterxml.jackson.annotation.*;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -50,7 +50,7 @@ public class Parqueadero {
     private Usuario usuario;
 
     @OneToMany(orphanRemoval = true, mappedBy = "parqueadero", cascade = CascadeType.ALL)
-    // @JsonManagedReference
+    //@JsonManagedReference
     private List<Vehiculo> vehiculos = new ArrayList<>();
 
     public Parqueadero() {

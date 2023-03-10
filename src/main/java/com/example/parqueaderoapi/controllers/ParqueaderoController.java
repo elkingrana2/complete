@@ -15,6 +15,7 @@ import com.example.parqueaderoapi.entities.Vehiculo;
 import com.example.parqueaderoapi.services.ParqueaderoService;
 import com.example.parqueaderoapi.excepcions.*;
 
+
 @RestController
 @RequestMapping("/parqueaderos")
 public class ParqueaderoController {
@@ -98,5 +99,12 @@ public class ParqueaderoController {
         List<Parqueadero> parqueaderos = parqueaderoService.obtenerParqueaderosPorUsuario(idUsuario);
         return ResponseEntity.ok(parqueaderos);
     }
+
+    // optener detalle de un vehiculo por su placa
+    @GetMapping("/vehiculo/detalle/{placa}")
+    public Vehiculo detalleVehiculo(@PathVariable String placa) {
+        return parqueaderoService.detalleVehiculo(placa);
+    }
+    
 
 }

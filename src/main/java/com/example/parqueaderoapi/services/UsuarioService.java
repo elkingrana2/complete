@@ -10,9 +10,6 @@ import org.springframework.stereotype.Service;
 import com.example.parqueaderoapi.entities.Parqueadero;
 import com.example.parqueaderoapi.entities.Usuario;
 import com.example.parqueaderoapi.excepcions.CorreoEnUsoException;
-import com.example.parqueaderoapi.excepcions.ParqueaderoYaAsociadoException;
-import com.example.parqueaderoapi.excepcions.ParqueaderoYaAsociadoAUsuarioException;
-import com.example.parqueaderoapi.excepcions.ParqueaderoNoEncontradoException;
 //import com.example.parqueaderoapi.excepcions.NombreEnUsoException;
 import com.example.parqueaderoapi.excepcions.UsuarioNoEncontradoException;
 import com.example.parqueaderoapi.repositories.ParqueaderoRepository;
@@ -95,20 +92,7 @@ public class UsuarioService {
 
         Optional<Parqueadero> optionalParqueadero = parqueaderoRepository.findById(idParqueadero);
 
-        // verificar que el parqueadero exista
-        if (!optionalParqueadero.isPresent()) {
-            throw new ParqueaderoNoEncontradoException(idParqueadero);
-        }
-
         Parqueadero parqueadero = optionalParqueadero.get();
-
-        if (usuario.getParqueaderos().contains(parqueadero)) {
-            throw new ParqueaderoYaAsociadoAUsuarioException(idParqueadero, idUsuario);
-        }
-
-        if (parqueadero.getUsuario() != null) {
-            throw new ParqueaderoYaAsociadoException(parqueadero.getId());
-        }
 
         usuario.addParqueadero(parqueadero);
         usuarioRepository.save(usuario);
