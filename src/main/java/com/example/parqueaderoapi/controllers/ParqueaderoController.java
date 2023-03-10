@@ -84,6 +84,8 @@ public class ParqueaderoController {
         return ResponseEntity.ok(vehiculos);
     }
 
+     
+
     // ver los vehiculos por id de un parqueadero (Los vehiculos que se encuentran
     // en ese parqueadero)
 
@@ -98,13 +100,15 @@ public class ParqueaderoController {
     public ResponseEntity<List<Parqueadero>> obtenerParqueaderosPorUsuario(@PathVariable Long idUsuario) {
         List<Parqueadero> parqueaderos = parqueaderoService.obtenerParqueaderosPorUsuario(idUsuario);
         return ResponseEntity.ok(parqueaderos);
-    }
+    } 
 
-    // optener detalle de un vehiculo por su placa
+    
+        // optener detalle de un vehiculo por su placa
     @GetMapping("/vehiculo/detalle/{placa}")
     public Vehiculo detalleVehiculo(@PathVariable String placa) {
         return parqueaderoService.detalleVehiculo(placa);
-    }
+     }
+     
     
 
 }

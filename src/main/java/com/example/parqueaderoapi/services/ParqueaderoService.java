@@ -194,7 +194,7 @@ public class ParqueaderoService {
 
         return vehiculoRepository.findAll();
     }
-
+     
     // ver los vehiculos por id de un parqueadero (Los vehiculos que se encuentran
     // en ese parqueadero)
 
@@ -237,7 +237,9 @@ public class ParqueaderoService {
         return usuario.getParqueaderos();
     }
 
-    // optener detalle de un vehiculo por su placa
+   
+    
+      // optener detalle de un vehiculo por su placa
   public Vehiculo detalleVehiculo(String placa) {
 
     if (placa == null) {
@@ -254,7 +256,8 @@ public class ParqueaderoService {
 
     return vehiculo.get();
 
-  }
+    }
+     
     
     
         
