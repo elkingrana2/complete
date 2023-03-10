@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
+import com.example.parqueaderoapi.responses.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,9 +39,9 @@ public class ParqueaderoService {
         return parqueaderoRepository.findAll();
     }
 
-    public Parqueadero crearParqueadero(Parqueadero parqueadero) throws NombreEnUsoException {
+    public Parqueadero crearParqueadero(Parqueadero parqueadero) {
         if (parqueaderoRepository.findByNombre(parqueadero.getNombre()).isPresent()) {
-            throw new NombreEnUsoException(parqueadero.getNombre());
+            throw new BadRequestException(new ErrorResponse("El nombre " + parqueadero.getNombre() + " ya está en uso."));
         }
         parqueadero.setEspacioDisponible(parqueadero.getCapacidad());
         return parqueaderoRepository.save(parqueadero);

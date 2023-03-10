@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,14 +30,10 @@ public class ParqueaderoController {
         return ResponseEntity.ok(parqueaderos);
     }
 
-    @PostMapping
-    public ResponseEntity<Parqueadero> crearParqueadero(@RequestBody Parqueadero parqueadero) {
-        try {
-            Parqueadero nuevoParqueadero = parqueaderoService.crearParqueadero(parqueadero);
-            return ResponseEntity.status(HttpStatus.CREATED).body(nuevoParqueadero);
-        } catch (NombreEnUsoException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseStatus(HttpStatus.CREATED)
+    public Parqueadero crearParqueadero(@RequestBody Parqueadero parqueadero) {
+        return parqueaderoService.crearParqueadero(parqueadero);
     }
 
     @GetMapping("/{id}")
@@ -53,7 +50,7 @@ public class ParqueaderoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Parqueadero> actualizarParqueadero(@PathVariable Long id,
-            @RequestBody Parqueadero parqueadero) {
+                                                             @RequestBody Parqueadero parqueadero) {
         Parqueadero parqueaderoActualizado = parqueaderoService.actualizarParqueadero(id, parqueadero);
         return ResponseEntity.ok(parqueaderoActualizado);
     }
@@ -61,7 +58,7 @@ public class ParqueaderoController {
     // Ingresar un vehiculo al parqueadero
     @PostMapping("/{parqueaderoId}/vehiculos")
     public ResponseEntity<String> ingresarVehiculo(@PathVariable Long parqueaderoId,
-            @RequestBody Vehiculo vehiculoRequest) {
+                                                   @RequestBody Vehiculo vehiculoRequest) {
 
         parqueaderoService.ingresarVehiculo(parqueaderoId, vehiculoRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body("Vehiculo ingresado correctamente");
@@ -104,16 +101,11 @@ public class ParqueaderoController {
         return ResponseEntity.ok(parqueaderos);
     }
 
-     // optener detalle de un vehiculo por su placa
-     @GetMapping("/vehiculo/{placa}")
-     public Vehiculo detalleVehiculo(@PathVariable String placa) {
-         return parqueaderoService.detalleVehiculo(placa);
-      }
+    // optener detalle de un vehiculo por su placa
+    @GetMapping("/vehiculo/{placa}")
+    public Vehiculo detalleVehiculo(@PathVariable String placa) {
+        return parqueaderoService.detalleVehiculo(placa);
+    }
 
-     
-
-    
-     
-    
 
 }

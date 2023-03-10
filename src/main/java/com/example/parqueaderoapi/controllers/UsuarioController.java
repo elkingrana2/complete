@@ -1,6 +1,8 @@
 package com.example.parqueaderoapi.controllers;
 
 import java.util.*;
+
+import com.example.parqueaderoapi.requests.UserRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,9 +37,9 @@ public class UsuarioController {
     }
 
     @PostMapping()
-    public ResponseEntity<Usuario> crearUsuario(@RequestBody Usuario usuario) {
+    public ResponseEntity<Usuario> crearUsuario(@RequestBody @Valid UserRequest userRequest) {
         try {
-            Usuario nuevoUsuario = usuarioService.crearUsuario(usuario);
+            Usuario nuevoUsuario = usuarioService.crearUsuario(new Usuario(userRequest));
             return ResponseEntity.status(HttpStatus.CREATED).body(nuevoUsuario);
         } catch (NombreEnUsoException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();

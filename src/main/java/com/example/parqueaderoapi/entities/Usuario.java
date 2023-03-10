@@ -2,6 +2,7 @@ package com.example.parqueaderoapi.entities;
 
 import java.util.*;
 
+import com.example.parqueaderoapi.requests.UserRequest;
 import com.fasterxml.jackson.annotation.*;
 
 //import org.springframework.boot.context.properties.bind.Name;
@@ -57,6 +58,11 @@ public class Usuario {
         this.rol = rol;
         this.correo = correo;
         this.parqueaderos = parqueaderos;
+    }
+
+    public Usuario(UserRequest userRequest) {
+        this.nombre = userRequest.getNombre();
+        this.correo = userRequest.getCorreo();
     }
 
     public Long getId() {
