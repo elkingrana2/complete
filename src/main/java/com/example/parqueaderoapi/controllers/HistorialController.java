@@ -9,6 +9,7 @@ import com.example.parqueaderoapi.services.HistorialService;
 import java.util.List;
 import java.time.LocalDateTime;
 import org.springframework.http.ResponseEntity;
+import com.example.parqueaderoapi.entities.Historial;
 
 @RestController
 @RequestMapping("/historiales")
@@ -47,6 +48,46 @@ public class HistorialController {
       return ResponseEntity.notFound().build();
     }
 
+  }
+
+  // optener el promedio de uso de todos los parqueaderos por rango de fecha
+
+  // /historial/promedio-uso-todos-los-parqueaderos?fechaIngreso=2023-03-10T10:00:56.725490&fechaSalida=2023-03-10T11:03:56.725490
+
+  @GetMapping("/promedio-uso-todos-los-parqueaderos")
+  public ResponseEntity<Double> obtenerPromedioUsoTodosLosParqueaderos(
+      @RequestParam LocalDateTime fechaIngreso, @RequestParam LocalDateTime fechaSalida) {
+
+    Double promedioUso = historialService.obtenerPromedioUsoTodosLosParqueaderos(fechaIngreso,
+        fechaSalida);
+    if (promedioUso != null) {
+      return ResponseEntity.ok(promedioUso);
+    } else {
+      return ResponseEntity.notFound().build();
+    }
+
+  }
+
+  // optener el promedio de tiempo que los vehiculos permanecen en el parqueadero
+  @GetMapping("/promedio-tiempo-vehiculos-en-parqueadero")
+  public ResponseEntity<Double> obtenerPromedioTiempoVehiculoEnParqueadero(
+      @RequestParam Long parqueaderoId) {
+
+    Double promedioTiempo = historialService.obtenerPromedioTiempoVehiculoEnParqueadero(parqueaderoId);
+    if (promedioTiempo != null) {
+      return ResponseEntity.ok(promedioTiempo);
+    } else {
+      return ResponseEntity.notFound().build();
+    }
+
+  }
+
+  // listado de vehiculos por filtro de letra ordenando por fecha de salida mas
+  // reciente
+  @GetMapping("/vehiculosPorLetra")
+  public List<Historial> getVehiculosPorLetra(@RequestParam Long idParqueadero, LocalDateTime fechaInicio,
+      String letra) {
+    return historialService.obtenerVehiculosPorFiltro(idParqueadero, fechaInicio, letra);
   }
 
 }

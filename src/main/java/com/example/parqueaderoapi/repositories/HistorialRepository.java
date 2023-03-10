@@ -34,4 +34,19 @@ public interface HistorialRepository extends JpaRepository<Historial, Long> {
     Double obtenerPromedioUso(@Param("parqueaderoId") Long parqueaderoId,
             @Param("fechaIngreso") LocalDateTime fechaIngreso, @Param("fechaSalida") LocalDateTime fechaSalida);
 
+    // optener el promedio de uso de todos los parqueaderos por rango de fecha
+    @Query(value = "SELECT AVG(h.duracion_segundos) FROM historial h WHERE h.fecha_ingreso >= :fechaIngreso AND h.fecha_salida <= :fechaSalida", nativeQuery = true)
+    Double obtenerPromedioUsoTodosLosParqueaderos(@Param("fechaIngreso") LocalDateTime fechaIngreso,
+            @Param("fechaSalida") LocalDateTime fechaSalida);
+
+    // optener el promedio de tiempo que los vehiculos permanecen en el parqueadero
+    @Query(value = "SELECT AVG(h.duracion_segundos) AS promedio_tiempo FROM historial h WHERE parqueadero_id = :parqueaderoId", nativeQuery = true)
+    Double obtenerPromedioTiempoVehiculoEnParqueadero(@Param("parqueaderoId") Long parqueaderoId);
+
+    // listado de vehiculos por filtro de letra ordenando por fecha de salida mas
+    // reciente
+    @Query(value = "SELECT * FROM historial WHERE parqueadero_id = :parqueaderoId AND fecha_ingreso >= :fechaInicio AND placa_vehiculo LIKE %:letra% ORDER BY fecha_salida DESC", nativeQuery = true)
+    List<Historial> obtenerVehiculosPorFiltro(@Param("parqueaderoId") Long parqueaderoId,
+            @Param("fechaInicio") LocalDateTime fechaInicio, @Param("letra") String letra);
+
 }
