@@ -37,7 +37,7 @@ public class Historial {
     private Vehiculo vehiculo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    //@JsonBackReference
+    // @JsonBackReference
     @JoinColumn(name = "parqueadero_id", nullable = false)
     private Parqueadero parqueadero_id;
 
