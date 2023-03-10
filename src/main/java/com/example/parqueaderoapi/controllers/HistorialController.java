@@ -34,23 +34,19 @@ public class HistorialController {
 
   // /historial/promedio-uso?parqueaderoId=2&fechaIngreso=2023-03-10T10:00:56.725490&fechaSalida=2023-03-10T11:03:56.725490
 
-  /*
-   * @GetMapping("/promedio-uso")
-   * public ResponseEntity<Double> obtenerPromedioUso(@RequestParam Long
-   * parqueaderoId,
-   * 
-   * @RequestParam LocalDateTime fechaIngreso, @RequestParam LocalDateTime
-   * fechaSalida) {
-   * 
-   * Double promedioUso = historialService.obtenerPromedioUso(parqueaderoId,
-   * fechaIngreso, fechaSalida);
-   * if (promedioUso != null) {
-   * return ResponseEntity.ok(promedioUso);
-   * } else {
-   * return ResponseEntity.notFound().build();
-   * }
-   * 
-   * }
-   */
+  @GetMapping("/promedio-uso")
+  public ResponseEntity<Double> obtenerPromedioUso(@RequestParam Long parqueaderoId,
+
+      @RequestParam LocalDateTime fechaIngreso, @RequestParam LocalDateTime fechaSalida) {
+
+    Double promedioUso = historialService.obtenerPromedioUso(parqueaderoId,
+        fechaIngreso, fechaSalida);
+    if (promedioUso != null) {
+      return ResponseEntity.ok(promedioUso);
+    } else {
+      return ResponseEntity.notFound().build();
+    }
+
+  }
 
 }

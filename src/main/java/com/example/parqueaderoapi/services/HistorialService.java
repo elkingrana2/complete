@@ -24,12 +24,9 @@ public class HistorialService {
 
   // obtener el promedio de uso de un parqueadero por rango de fecha
 
-  /*
-   * public Double obtenerPromedioUso(Long parqueaderoId, LocalDateTime
-   * fechaIngreso, LocalDateTime fechaSalida) {
-   * return historialRepository.obtenerPromedioUso(parqueaderoId, fechaIngreso,
-   * fechaSalida);
-   * }
-   */
+  public Double obtenerPromedioUso(Long parqueaderoId, LocalDateTime fechaIngreso, LocalDateTime fechaSalida) {
+    return historialRepository.obtenerPromedioUso(parqueaderoId, fechaIngreso,
+        fechaSalida);
+  }
 
 }
