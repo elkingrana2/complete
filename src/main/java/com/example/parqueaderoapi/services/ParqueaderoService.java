@@ -13,15 +13,6 @@ import com.example.parqueaderoapi.entities.Historial;
 import com.example.parqueaderoapi.entities.Parqueadero;
 import com.example.parqueaderoapi.entities.Usuario;
 import com.example.parqueaderoapi.entities.Vehiculo;
-import com.example.parqueaderoapi.excepcions.NombreEnUsoException;
-import com.example.parqueaderoapi.excepcions.ParqueaderoNoEncontradoException;
-import com.example.parqueaderoapi.excepcions.UsuarioNoEncontradoException;
-import com.example.parqueaderoapi.excepcions.VehiculoEnParqueaderoException;
-import com.example.parqueaderoapi.excepcions.VehiculoException;
-import com.example.parqueaderoapi.excepcions.VehiculoNoEncontradoException;
-import com.example.parqueaderoapi.excepcions.ParqueaderoNoAsignadoException;
-import com.example.parqueaderoapi.excepcions.VehiculoNoAsignadoException;
-import com.example.parqueaderoapi.excepcions.ParqueaderoException;
 import com.example.parqueaderoapi.repositories.HistorialRepository;
 import com.example.parqueaderoapi.repositories.ParqueaderoRepository;
 import com.example.parqueaderoapi.repositories.UsuarioRepository;
@@ -94,17 +85,20 @@ public class ParqueaderoService {
         Optional<Parqueadero> optionalParqueadero = parqueaderoRepository.findById(parqueaderoId);
 
         if (optionalParqueadero.get().getUsuario() == null) {
-            throw new ParqueaderoNoAsignadoException(parqueaderoId);
+            
+            throw new BadRequestException(new ErrorResponse("El parqueadero con ID: " + parqueaderoId + " no se ha asignado a ningun usuario"));
         }
 
         if (!optionalParqueadero.isPresent()) {
-            throw new ParqueaderoNoEncontradoException(parqueaderoId);
+            //throw new ParqueaderoNoEncontradoException(parqueaderoId);
+            throw new BadRequestException(new ErrorResponse("No se pudo encontrar al parqueadero con ID: " + parqueaderoId));
         }
 
         Optional<Vehiculo> optionalVehiculo = vehiculoRepository.findByPlaca(vehiculoRequest.getPlaca());
 
         if (optionalVehiculo.isPresent() && optionalVehiculo.get().getParqueadero() != null) {
-            throw new VehiculoEnParqueaderoException(vehiculoRequest.getPlaca());
+            //throw new VehiculoEnParqueaderoException(vehiculoRequest.getPlaca());
+            throw new BadRequestException(new ErrorResponse("No se puede Registrar Ingreso, ya existe la placa " + vehiculoRequest.getPlaca()));
         }
 
         if (optionalParqueadero.get().getEspacioDisponible() <= 0) {

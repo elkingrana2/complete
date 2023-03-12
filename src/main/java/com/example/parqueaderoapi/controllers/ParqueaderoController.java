@@ -62,7 +62,7 @@ public class ParqueaderoController {
     }
 
     // Ingresar un vehiculo al parqueadero
-    @PostMapping("/{parqueaderoId}/vehiculos")
+    @PostMapping(path = "/{parqueaderoId}/vehiculos", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public String ingresarVehiculo(@PathVariable Long parqueaderoId,
                                                    @RequestBody @Valid VehiculoRequest vehiculoRequest) {
