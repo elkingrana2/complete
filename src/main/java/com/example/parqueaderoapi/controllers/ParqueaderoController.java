@@ -14,7 +14,12 @@ import com.example.parqueaderoapi.entities.Parqueadero;
 import com.example.parqueaderoapi.entities.Usuario;
 import com.example.parqueaderoapi.entities.Vehiculo;
 import com.example.parqueaderoapi.services.ParqueaderoService;
+
+import jakarta.validation.Valid;
+
 import com.example.parqueaderoapi.excepcions.*;
+import com.example.parqueaderoapi.requests.ParqueaderoRequest;
+import com.example.parqueaderoapi.requests.VehiculoRequest;
 
 
 @RestController
@@ -32,8 +37,9 @@ public class ParqueaderoController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
-    public Parqueadero crearParqueadero(@RequestBody Parqueadero parqueadero) {
-        return parqueaderoService.crearParqueadero(parqueadero);
+    public Parqueadero crearParqueadero(@RequestBody @Valid ParqueaderoRequest parqueaderoRequest) {
+        Parqueadero nuevParqueadero = parqueaderoService.crearParqueadero(new Parqueadero(parqueaderoRequest));
+        return  nuevParqueadero;
     }
 
     @GetMapping("/{id}")
@@ -57,11 +63,12 @@ public class ParqueaderoController {
 
     // Ingresar un vehiculo al parqueadero
     @PostMapping("/{parqueaderoId}/vehiculos")
-    public ResponseEntity<String> ingresarVehiculo(@PathVariable Long parqueaderoId,
-                                                   @RequestBody Vehiculo vehiculoRequest) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public String ingresarVehiculo(@PathVariable Long parqueaderoId,
+                                                   @RequestBody @Valid VehiculoRequest vehiculoRequest) {
 
-        parqueaderoService.ingresarVehiculo(parqueaderoId, vehiculoRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Vehiculo ingresado correctamente");
+        parqueaderoService.ingresarVehiculo(parqueaderoId, new Vehiculo(vehiculoRequest));
+        return ("Vehiculo ingresado correctamente");
 
     }
 

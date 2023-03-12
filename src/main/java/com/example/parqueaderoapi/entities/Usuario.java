@@ -60,6 +60,7 @@ public class Usuario {
         this.parqueaderos = parqueaderos;
     }
 
+     
     public Usuario(UserRequest userRequest) {
         this.nombre = userRequest.getNombre();
         this.correo = userRequest.getCorreo();

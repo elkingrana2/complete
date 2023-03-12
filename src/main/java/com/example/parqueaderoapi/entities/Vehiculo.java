@@ -2,6 +2,7 @@ package com.example.parqueaderoapi.entities;
 
 import java.util.*;
 
+import com.example.parqueaderoapi.requests.VehiculoRequest;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -71,6 +72,13 @@ public class Vehiculo {
         this.fechaIngreso = fechaIngreso;
         this.fechaSalida = fechaSalida;
         this.parqueadero = parqueadero;
+    }
+
+    public Vehiculo (VehiculoRequest vehiculoRequest)
+    {
+        this.placa=vehiculoRequest.getPlaca();
+        this.modelo=vehiculoRequest.getModelo();
+        this.color=vehiculoRequest.getColor();
     }
 
     public String getPlaca() {

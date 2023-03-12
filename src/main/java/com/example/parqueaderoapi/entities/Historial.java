@@ -30,14 +30,14 @@ public class Historial {
     @Column(name = "duracion_segundos")
     private Long duracionSegundos;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
-    @JoinColumn(name = "placa_vehiculo")
     @NotNull
+    @ManyToOne(fetch = FetchType.LAZY) //
+    @JoinColumn(name = "placa_vehiculo")
+    @JsonBackReference
     private Vehiculo vehiculo;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    // @JsonBackReference
+    //@JsonBackReference
     @JoinColumn(name = "parqueadero_id", nullable = false)
     private Parqueadero parqueadero_id;
 
@@ -87,6 +87,7 @@ public class Historial {
         this.duracionSegundos = duracionSegundos;
     }
 
+
     public Vehiculo getVehiculo() {
         return vehiculo;
     }
@@ -95,6 +96,7 @@ public class Historial {
         this.vehiculo = vehiculo;
     }
 
+    @JsonBackReference
     public Parqueadero getParqueadero_id() {
         return parqueadero_id;
     }

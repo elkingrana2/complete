@@ -12,6 +12,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.*;
+//import com.example.parqueaderoapi.requests;
+import com.example.parqueaderoapi.requests.ParqueaderoRequest;
 
 import java.util.*;
 
@@ -75,6 +77,14 @@ public class Parqueadero {
         this.capacidad = capacidad;
         this.usuario = usuario;
         this.vehiculos = vehiculos;
+
+    }
+
+    public Parqueadero(ParqueaderoRequest parqueaderoRequest)
+    {
+        this.nombre = parqueaderoRequest.getNombre();
+        this.direccion = parqueaderoRequest.getDireccion();
+        this.capacidad = parqueaderoRequest.getCapacidad();
 
     }
 

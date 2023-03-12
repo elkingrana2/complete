@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 
 import com.example.parqueaderoapi.entities.Parqueadero;
 import com.example.parqueaderoapi.entities.Usuario;
+import com.example.parqueaderoapi.excepcions.BadRequestException;
 import com.example.parqueaderoapi.excepcions.CorreoEnUsoException;
 //import com.example.parqueaderoapi.excepcions.NombreEnUsoException;
 import com.example.parqueaderoapi.excepcions.UsuarioNoEncontradoException;
 import com.example.parqueaderoapi.repositories.ParqueaderoRepository;
 import com.example.parqueaderoapi.repositories.UsuarioRepository;
+import com.example.parqueaderoapi.responses.ErrorResponse;
 
 @Service
 public class UsuarioService {
@@ -38,10 +40,10 @@ public class UsuarioService {
         }
     }
 
-    public Usuario crearUsuario(Usuario usuario) throws CorreoEnUsoException {
+    public Usuario crearUsuario(Usuario usuario)  {
 
         if (usuarioRepository.findUsuarioByCorreo(usuario.getCorreo()).isPresent()) {
-            throw new CorreoEnUsoException(usuario.getCorreo());
+            throw new BadRequestException(new ErrorResponse("El correo electrónico " + usuario.getCorreo() + " ya está en uso."));
         }
         usuario.setRol("socio");
         return usuarioRepository.save(usuario);
