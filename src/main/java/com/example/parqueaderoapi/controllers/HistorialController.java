@@ -10,6 +10,10 @@ import java.util.List;
 import java.time.LocalDateTime;
 import org.springframework.http.ResponseEntity;
 import com.example.parqueaderoapi.entities.Historial;
+import org.springframework.http.MediaType;
+import java.util.Optional;
+import com.example.parqueaderoapi.excepcions.*;
+import com.example.parqueaderoapi.responses.*;
 
 @RestController
 @RequestMapping("/historiales")
@@ -19,14 +23,14 @@ public class HistorialController {
   HistorialService historialService;
 
   // optener el top 10 de vehiculos que mas ingresan al parqueadero
-  @GetMapping("/top10")
-  public List<Object[]> getTop10PlacasVehiculos() {
+  @GetMapping(path = "/top10")
+  public Optional<Object[]> getTop10PlacasVehiculos() {
     return historialService.getTop10PlacasVehiculos();
   }
 
   // optener los vehiculos en parqueaderos que estan registrados por primera vez
 
-  @GetMapping("/vehiculosRegistradosPorPrimeraVez")
+  @GetMapping(path = "/vehiculosRegistradosPorPrimeraVez")
   public List<Object[]> getVehiculosRegistradosPorPrimeraVez() {
     return historialService.getVehiculosRegistradosPorPrimeraVez();
   }
@@ -35,7 +39,7 @@ public class HistorialController {
 
   // /historial/promedio-uso?parqueaderoId=2&fechaIngreso=2023-03-10T10:00:56.725490&fechaSalida=2023-03-10T11:03:56.725490
 
-  @GetMapping("/promedio-uso")
+  @GetMapping(path = "/promedio-uso")
   public ResponseEntity<Double> obtenerPromedioUso(@RequestParam Long parqueaderoId,
 
       @RequestParam LocalDateTime fechaIngreso, @RequestParam LocalDateTime fechaSalida) {
@@ -54,7 +58,7 @@ public class HistorialController {
 
   // /historial/promedio-uso-todos-los-parqueaderos?fechaIngreso=2023-03-10T10:00:56.725490&fechaSalida=2023-03-10T11:03:56.725490
 
-  @GetMapping("/promedio-uso-todos-los-parqueaderos")
+  @GetMapping(path = "/promedio-uso-todos-los-parqueaderos")
   public ResponseEntity<Double> obtenerPromedioUsoTodosLosParqueaderos(
       @RequestParam LocalDateTime fechaIngreso, @RequestParam LocalDateTime fechaSalida) {
 
@@ -69,7 +73,7 @@ public class HistorialController {
   }
 
   // optener el promedio de tiempo que los vehiculos permanecen en el parqueadero
-  @GetMapping("/promedio-tiempo-vehiculos-en-parqueadero")
+  @GetMapping(path = "/promedio-tiempo-vehiculos-en-parqueadero")
   public ResponseEntity<Double> obtenerPromedioTiempoVehiculoEnParqueadero(
       @RequestParam Long parqueaderoId) {
 
@@ -84,9 +88,10 @@ public class HistorialController {
 
   // listado de vehiculos por filtro de letra ordenando por fecha de salida mas
   // reciente
-  @GetMapping("/vehiculosPorLetra")
+  @GetMapping(path = "/vehiculosPorLetra")
   public List<Historial> getVehiculosPorLetra(@RequestParam Long idParqueadero, LocalDateTime fechaInicio,
       String letra) {
+
     return historialService.obtenerVehiculosPorFiltro(idParqueadero, fechaInicio, letra);
   }
 

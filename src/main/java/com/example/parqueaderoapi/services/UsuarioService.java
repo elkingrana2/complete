@@ -36,14 +36,16 @@ public class UsuarioService {
         if (usuarioOptional.isPresent()) {
             return usuarioOptional.get();
         } else {
-            throw new UsuarioNoEncontradoException(id);
+            // throw new UsuarioNoEncontradoException(id);
+            throw new BadRequestException(new ErrorResponse("El usuario con id " + id + " no existe."));
         }
     }
 
-    public Usuario crearUsuario(Usuario usuario)  {
+    public Usuario crearUsuario(Usuario usuario) {
 
         if (usuarioRepository.findUsuarioByCorreo(usuario.getCorreo()).isPresent()) {
-            throw new BadRequestException(new ErrorResponse("El correo electrónico " + usuario.getCorreo() + " ya está en uso."));
+            throw new BadRequestException(
+                    new ErrorResponse("El correo electrónico " + usuario.getCorreo() + " ya está en uso."));
         }
         usuario.setRol("socio");
         return usuarioRepository.save(usuario);
@@ -52,12 +54,15 @@ public class UsuarioService {
     public Usuario actualizarUsuario(Long id, Usuario usuarioActualizado)
             throws UsuarioNoEncontradoException, CorreoEnUsoException {
         Usuario usuarioExistente = usuarioRepository.findById(id)
-                .orElseThrow(() -> new UsuarioNoEncontradoException(id));
+                .orElseThrow(
+                        () -> new BadRequestException(new ErrorResponse("El usuario con id " + id + " no existe.")));
 
         // Si el correo ha cambiado, verificar que no esté en uso
         if (!usuarioActualizado.getCorreo().equals(usuarioExistente.getCorreo()) &&
                 usuarioRepository.findUsuarioByCorreo(usuarioActualizado.getCorreo()).isPresent()) {
-            throw new CorreoEnUsoException(usuarioActualizado.getCorreo());
+            // throw new CorreoEnUsoException(usuarioActualizado.getCorreo());
+            throw new BadRequestException(
+                    new ErrorResponse("El correo electrónico " + usuarioActualizado.getCorreo() + " ya está en uso."));
         }
 
         // Actualizar el usuario existente con los nuevos datos
@@ -77,7 +82,8 @@ public class UsuarioService {
             usuarioRepository.deleteById(id);
             return true;
         } else {
-            throw new UsuarioNoEncontradoException(id);
+            // throw new UsuarioNoEncontradoException(id);
+            throw new BadRequestException(new ErrorResponse("El usuario con id " + id + " no existe."));
         }
     }
 
@@ -95,6 +101,24 @@ public class UsuarioService {
         Optional<Parqueadero> optionalParqueadero = parqueaderoRepository.findById(idParqueadero);
 
         Parqueadero parqueadero = optionalParqueadero.get();
+
+        if (usuario.getParqueaderos().contains(parqueadero)) {
+            throw new BadRequestException(new ErrorResponse("El parqueadero con id " + idParqueadero
+                    + " ya está asociado al usuario con id " + idUsuario + "."));
+        }
+
+        if (parqueadero.getUsuario() != null) {
+            throw new BadRequestException(new ErrorResponse("El parqueadero con id " + idParqueadero
+                    + " ya está asociado al usuario con id " + parqueadero.getUsuario().getId() + "."));
+        }
+
+        if (!optionalUsuario.isPresent()) {
+            throw new BadRequestException(new ErrorResponse("El usuario con id " + idUsuario + " no existe."));
+        }
+
+        if (!optionalParqueadero.isPresent()) {
+            throw new BadRequestException(new ErrorResponse("El parqueadero con id " + idParqueadero + " no existe."));
+        }
 
         usuario.addParqueadero(parqueadero);
         usuarioRepository.save(usuario);

@@ -21,7 +21,6 @@ import com.example.parqueaderoapi.excepcions.*;
 import com.example.parqueaderoapi.requests.ParqueaderoRequest;
 import com.example.parqueaderoapi.requests.VehiculoRequest;
 
-
 @RestController
 @RequestMapping("/parqueaderos")
 public class ParqueaderoController {
@@ -39,7 +38,7 @@ public class ParqueaderoController {
     @ResponseStatus(HttpStatus.CREATED)
     public Parqueadero crearParqueadero(@RequestBody @Valid ParqueaderoRequest parqueaderoRequest) {
         Parqueadero nuevParqueadero = parqueaderoService.crearParqueadero(new Parqueadero(parqueaderoRequest));
-        return  nuevParqueadero;
+        return nuevParqueadero;
     }
 
     @GetMapping("/{id}")
@@ -56,7 +55,7 @@ public class ParqueaderoController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Parqueadero> actualizarParqueadero(@PathVariable Long id,
-                                                             @RequestBody Parqueadero parqueadero) {
+            @RequestBody Parqueadero parqueadero) {
         Parqueadero parqueaderoActualizado = parqueaderoService.actualizarParqueadero(id, parqueadero);
         return ResponseEntity.ok(parqueaderoActualizado);
     }
@@ -65,10 +64,11 @@ public class ParqueaderoController {
     @PostMapping(path = "/{parqueaderoId}/vehiculos", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public String ingresarVehiculo(@PathVariable Long parqueaderoId,
-                                                   @RequestBody @Valid VehiculoRequest vehiculoRequest) {
+            @RequestBody @Valid VehiculoRequest vehiculoRequest) {
 
         parqueaderoService.ingresarVehiculo(parqueaderoId, new Vehiculo(vehiculoRequest));
-        return ("Vehiculo ingresado correctamente");
+        String mensaje = "{\"mensaje\": \"Vehiculo ingresado correctamente\"}";
+        return mensaje;
 
     }
 
@@ -80,17 +80,16 @@ public class ParqueaderoController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Salida registrada correctamente");
     }
 
-
-    /* 
-
-    // Ver los vehiculos los parqueaderos
-
-    @GetMapping("/vehiculos")
-    public ResponseEntity<List<Vehiculo>> obtenerVehivulos() {
-        List<Vehiculo> vehiculos = parqueaderoService.obtenerVehiculos();
-        return ResponseEntity.ok(vehiculos);
-    }*/
-
+    /*
+     * 
+     * // Ver los vehiculos los parqueaderos
+     * 
+     * @GetMapping("/vehiculos")
+     * public ResponseEntity<List<Vehiculo>> obtenerVehivulos() {
+     * List<Vehiculo> vehiculos = parqueaderoService.obtenerVehiculos();
+     * return ResponseEntity.ok(vehiculos);
+     * }
+     */
 
     // ver los vehiculos por id de un parqueadero (Los vehiculos que se encuentran
     // en ese parqueadero)
@@ -113,6 +112,5 @@ public class ParqueaderoController {
     public Vehiculo detalleVehiculo(@PathVariable String placa) {
         return parqueaderoService.detalleVehiculo(placa);
     }
-
 
 }

@@ -32,7 +32,8 @@ public class ParqueaderoService {
 
     public Parqueadero crearParqueadero(Parqueadero parqueadero) {
         if (parqueaderoRepository.findByNombre(parqueadero.getNombre()).isPresent()) {
-            throw new BadRequestException(new ErrorResponse("El nombre " + parqueadero.getNombre() + " ya está en uso."));
+            throw new BadRequestException(
+                    new ErrorResponse("El nombre " + parqueadero.getNombre() + " ya está en uso."));
         }
         parqueadero.setEspacioDisponible(parqueadero.getCapacidad());
         return parqueaderoRepository.save(parqueadero);
@@ -84,21 +85,24 @@ public class ParqueaderoService {
 
         Optional<Parqueadero> optionalParqueadero = parqueaderoRepository.findById(parqueaderoId);
 
-        if (optionalParqueadero.get().getUsuario() == null) {
-            
-            throw new BadRequestException(new ErrorResponse("El parqueadero con ID: " + parqueaderoId + " no se ha asignado a ningun usuario"));
+        if (!optionalParqueadero.isPresent()) {
+            // throw new ParqueaderoNoEncontradoException(parqueaderoId);
+            throw new BadRequestException(
+                    new ErrorResponse("No se pudo encontrar al parqueadero con ID: " + parqueaderoId));
         }
 
-        if (!optionalParqueadero.isPresent()) {
-            //throw new ParqueaderoNoEncontradoException(parqueaderoId);
-            throw new BadRequestException(new ErrorResponse("No se pudo encontrar al parqueadero con ID: " + parqueaderoId));
+        if (optionalParqueadero.get().getUsuario() == null) {
+
+            throw new BadRequestException(new ErrorResponse(
+                    "El parqueadero con ID: " + parqueaderoId + " no se ha asignado a ningun usuario"));
         }
 
         Optional<Vehiculo> optionalVehiculo = vehiculoRepository.findByPlaca(vehiculoRequest.getPlaca());
 
         if (optionalVehiculo.isPresent() && optionalVehiculo.get().getParqueadero() != null) {
-            //throw new VehiculoEnParqueaderoException(vehiculoRequest.getPlaca());
-            throw new BadRequestException(new ErrorResponse("No se puede Registrar Ingreso, ya existe la placa " + vehiculoRequest.getPlaca()));
+            // throw new VehiculoEnParqueaderoException(vehiculoRequest.getPlaca());
+            throw new BadRequestException(new ErrorResponse(
+                    "No se puede Registrar Ingreso, ya existe la placa " + vehiculoRequest.getPlaca()));
         }
 
         if (optionalParqueadero.get().getEspacioDisponible() <= 0) {
@@ -156,7 +160,10 @@ public class ParqueaderoService {
         }
 
         if (optionalVehiculo.get().getParqueadero().getId() != idParqueadero) {
-            throw new ParqueaderoException("El vehiculo no se encuentra en este parqueadero");
+            // throw new ParqueaderoException("El vehiculo no se encuentra en este
+            // parqueadero");
+            throw new BadRequestException(
+                    new ErrorResponse("El vehiculo con placa " + placa + " no se encuentra en este parqueadero"));
         }
 
         Parqueadero parqueadero = optionalParqueadero.get();
@@ -188,15 +195,6 @@ public class ParqueaderoService {
 
     }
 
-    /*
-     * // ver los vehiculos de un parqueadero
-     * 
-     * public List<Vehiculo> obtenerVehiculos() {
-     * 
-     * return vehiculoRepository.findAll();
-     * }
-     */
-
     // ver los vehiculos por id de un parqueadero (Los vehiculos que se encuentran
     // en ese parqueadero)
 
@@ -205,11 +203,15 @@ public class ParqueaderoService {
         Optional<Parqueadero> optionalParqueadero = parqueaderoRepository.findById(idParqueadero);
 
         if (!optionalParqueadero.isPresent()) {
-            throw new ParqueaderoNoEncontradoException(idParqueadero);
+            // throw new ParqueaderoNoEncontradoException(idParqueadero);
+            throw new BadRequestException(
+                    new ErrorResponse("No se pudo encontrar al parqueadero con ID: " + idParqueadero));
         }
 
         if (optionalParqueadero.get().getUsuario() == null) {
-            throw new ParqueaderoNoAsignadoException(idParqueadero);
+            // throw new ParqueaderoNoAsignadoException(idParqueadero);
+            throw new BadRequestException(new ErrorResponse(
+                    "El parqueadero con ID: " + idParqueadero + " no se ha asignado a ningun usuario"));
         }
 
         Parqueadero parqueadero = optionalParqueadero.get();
@@ -227,11 +229,15 @@ public class ParqueaderoService {
         Optional<Usuario> optionalUsuario = usuarioRepository.findById(idUsuario);
 
         if (!optionalUsuario.isPresent()) {
-            throw new UsuarioNoEncontradoException(idUsuario);
+            // throw new UsuarioNoEncontradoException(idUsuario);
+            throw new BadRequestException(
+                    new ErrorResponse("No se pudo encontrar al usuario con ID: " + idUsuario));
         }
 
         if (optionalUsuario.get().getParqueaderos().isEmpty()) {
-            throw new ParqueaderoException("El usuario no tiene parqueaderos");
+            // throw new ParqueaderoException("El usuario no tiene parqueaderos");
+            throw new BadRequestException(
+                    new ErrorResponse("El usuario con ID: " + idUsuario + " no tiene parqueaderos"));
         }
 
         Usuario usuario = optionalUsuario.get();
@@ -243,15 +249,21 @@ public class ParqueaderoService {
     public Vehiculo detalleVehiculo(String placa) {
 
         if (placa == null) {
-            throw new IllegalArgumentException("La placa no puede ser nula");
+            // throw new IllegalArgumentException("La placa no puede ser nula");
+            throw new BadRequestException(
+                    new ErrorResponse("la placa no puede ser nula"));
         }
         if (placa.isEmpty()) {
-            throw new IllegalArgumentException("La placa no puede ser vacia");
+            // throw new IllegalArgumentException("La placa no puede ser vacia");
+            throw new BadRequestException(
+                    new ErrorResponse("la placa no puede ser vacia"));
         }
         Optional<Vehiculo> vehiculo = vehiculoRepository.findByPlaca(placa);
 
         if (!vehiculo.isPresent()) {
-            throw new VehiculoException("El vehiculo con placa " + placa + " no existe");
+            // throw new VehiculoException("El vehiculo con placa " + placa + " no existe");
+            throw new BadRequestException(
+                    new ErrorResponse("El vehiculo con placa " + placa + " no existe"));
         }
 
         return vehiculo.get();
